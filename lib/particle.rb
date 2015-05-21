@@ -71,8 +71,10 @@ module Particle
     #XXX: the basic auth sent here sets client id on the token, i think?
     # docs not totally clear on that point, but recommend using
     # particle:particle instead of real auth.
+    # values other than particle:particle do not appear to work.
     def create_access_token(expires_in=nil, expires_at=nil)
       conn = get_connection_with_basic_auth()
+      conn.basic_auth("particle", "particle")
       post_data = {
         grant_type: "password",
         username: @username,
@@ -84,23 +86,23 @@ module Particle
         post_data[:expires_at] = expires_at
       end
 
-      r = conn.post('oauth/token', post_data)
+      # the leading '/' here is important, as this endpoint is not under /v1
+      r = conn.post('/oauth/token', post_data)
       if r.success?
-        puts JSON.parse(r.body)
+        return JSON.parse(r.body)
       else
-        raise Particle::Error.new("Token Creation failed: " +
-            JSON.parse(r.body))
+        raise Particle::Error.new("Token Creation failed: " + r.body)
       end
     end
 
-    def delete_token(access_token)
+    def delete_access_token(access_token)
       c = get_connection_with_basic_auth()
       r = c.delete("access_tokens/#{access_token}")
       if r.success?
-        puts JSON.parse(r.body)
+        #puts JSON.parse(r.body)
+        return r.success?
       else
-        raise Particle::Error.new("Token Delete failed: " +
-            JSON.parse(r.body))
+        raise Particle::Error.new("Token Delete failed: " + r.body)
       end
     end
       
