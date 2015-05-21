@@ -9,3 +9,21 @@ describe Particle do
     expect(true).to eq(true)
   end
 end
+
+describe Particle::Client do
+
+  context "good access token" do
+    before { @client = Particle::Client.new("good_auth_token") }
+
+    subject { @client }
+
+    describe "#devices" do
+      it "lists devices" do
+        VCR.use_cassette("devices") do
+          list = subject.devices
+          expect(list).to be_a Array
+        end
+      end
+    end
+  end
+end
