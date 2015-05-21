@@ -3,6 +3,8 @@ require 'json'
 require 'particle/version'
 
 module Particle
+  # Simple client for particle.io web services
+  # http://docs.particle.io/photon/api/
 
   class Error < StandardError
     # Generic error class for stuff gone wrong.
@@ -30,6 +32,16 @@ module Particle
       else
         raise Particle::Error.new "API Error: #{JSON.parse(r.body)}"
       end
+    end
+
+    def claim(device_id)
+      # Claim a Core device. returns bool
+      post_data = {
+        access_token: @access_token,
+        id: device_id
+      }
+      r = @client.post("devices")
+      r.success?
     end
 
     # Access_token-related methods require username and password auth.
