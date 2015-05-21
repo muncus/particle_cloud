@@ -1,5 +1,6 @@
 require 'faraday'
 require 'json'
+require 'particle/version'
 
 module Particle
 
