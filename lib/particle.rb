@@ -44,6 +44,11 @@ module Particle
       r.success?
     end
 
+    # return Particle::Device for the id specified.
+    def device(device_id)
+      nil
+    end
+
     # Access_token-related methods require username and password auth.
     # This helper gets a Faraday connection with the auth headers set,
     # or raises an error.
@@ -60,11 +65,10 @@ module Particle
     def access_tokens()
       conn = get_connection_with_basic_auth()
       r = conn.get('access_tokens')
-      puts r.body
       if r.success?
         @authtokens = JSON.parse(r.body)
       else
-        raise Particle::Error.new "API Error: #{JSON.parse(r.body)}"
+        raise Particle::Error.new "API Error: #{r.body}"
       end
     end
 
@@ -99,7 +103,6 @@ module Particle
       c = get_connection_with_basic_auth()
       r = c.delete("access_tokens/#{access_token}")
       if r.success?
-        #puts JSON.parse(r.body)
         return r.success?
       else
         raise Particle::Error.new("Token Delete failed: " + r.body)
