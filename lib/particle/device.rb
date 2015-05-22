@@ -7,8 +7,6 @@ module Particle
 
     def initialize(access_token, deviceid, base_url: nil, lazy_init: false)
       @id = deviceid
-      puts base_url
-      puts access_token
       super(access_token, base_url: base_url)
 
       self.delayed_init() unless lazy_init
@@ -30,6 +28,8 @@ module Particle
             self.function(f, **args)
           end
         end
+      else
+        raise Particle::Error.new("Error fetching device info: #{devinfo_response.body}")
       end
     end
 
