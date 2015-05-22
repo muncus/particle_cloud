@@ -14,6 +14,8 @@ module Particle
 
     def delayed_init
       devinfo_response = @client.get("devices/#{@id}")
+      #TODO: check for names which are present in both lists.
+      # - is there protection against this?
       if devinfo_response.success?
         devobj = JSON.parse(devinfo_response.body)
         devobj['variables'].keys().each do |v|
@@ -28,6 +30,7 @@ module Particle
             self.function(f, **args)
           end
         end
+        @info_fetched = true
       else
         raise Particle::Error.new("Error fetching device info: #{devinfo_response.body}")
       end
@@ -49,13 +52,23 @@ module Particle
     end
 
     def function(func, **args)
-      r = @client.post("devices/#{id}/#{func}",
+      r = @client.post("devices/#{@id}/#{func}",
                        **args) 
       if r.success?
         JSON.parse(r.body)['return_value']
       end
     end
     
+    # variables and functions called before initialization will trigger a call
+    # to delayed_init(), populating methods, so they can be called.
+    def method_missing(m, *args, &block)
+      if not @info_fetched
+        delayed_init()
+        self.call(m, *args, &block)
+      else
+        super()
+      end
+    end
   end
 
 end
