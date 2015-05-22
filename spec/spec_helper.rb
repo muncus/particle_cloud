@@ -14,5 +14,5 @@ VCR.configure do |c|
 end
 
 RSpec.configure do |config|
-  # some (optional) config here
+  config.extend VCR::RSpec::Macros
 end
