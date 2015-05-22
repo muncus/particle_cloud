@@ -72,9 +72,7 @@ module Particle
       end
     end
 
-    #XXX: the basic auth sent here sets client id on the token, i think?
-    # docs not totally clear on that point, but recommend using
-    # particle:particle instead of real auth.
+    #NOTE: the basic auth sent here sets client id on the token.
     # values other than particle:particle do not appear to work.
     def create_access_token(expires_in=nil, expires_at=nil)
       conn = get_connection_with_basic_auth()
@@ -103,7 +101,7 @@ module Particle
       c = get_connection_with_basic_auth()
       r = c.delete("access_tokens/#{access_token}")
       if r.success?
-        return r.success?
+        return true
       else
         raise Particle::Error.new("Token Delete failed: " + r.body)
       end
