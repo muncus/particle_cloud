@@ -15,7 +15,7 @@ module Particle
     attr_writer :password
     attr_accessor :username
 
-    def initialize(access_token, base_url=nil)
+    def initialize(access_token, base_url: nil)
       @access_token = access_token
       @base_url = (base_url or DefaultBaseUrl)
       @client = Faraday.new(
@@ -73,7 +73,7 @@ module Particle
 
     #NOTE: the basic auth sent here sets client id on the token.
     # values other than particle:particle do not appear to work.
-    def create_access_token(expires_in=nil, expires_at=nil)
+    def create_access_token(expires_in: nil, expires_at: nil)
       conn = get_connection_with_basic_auth()
       conn.basic_auth("particle", "particle")
       post_data = {
