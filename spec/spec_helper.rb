@@ -11,8 +11,8 @@ VCR.configure do |c|
     :allow_playback_repeats => true,
   }
   c.allow_http_connections_when_no_cassette = false
+  c.configure_rspec_metadata!
 end
 
 RSpec.configure do |config|
-  config.extend VCR::RSpec::Macros
 end
