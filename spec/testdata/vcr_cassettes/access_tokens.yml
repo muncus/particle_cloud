@@ -1,0 +1,145 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://username:password@api.particle.io/v1/access_tokens
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.1
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.2
+      Date:
+      - Thu, 21 May 2015 23:03:37 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '380'
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - '*'
+      Etag:
+      - W/"17c-9ec491bc"
+    body:
+      encoding: UTF-8
+      string: |-
+        [
+          {
+            "token": "token1",
+            "expires_at": null,
+            "client": "spark-ide"
+          },
+          {
+            "token": "token2",
+            "expires_at": null,
+            "client": "user"
+          }
+        ]
+    http_version: 
+  recorded_at: Thu, 21 May 2015 23:03:37 GMT
+- request:
+    method: delete
+    uri: https://username:password@api.particle.io/v1/access_tokens/some_auth_token
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.1
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.2
+      Date:
+      - Thu, 21 May 2015 23:03:38 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '16'
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - '*'
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "ok": true
+        }
+    http_version: 
+  recorded_at: Thu, 21 May 2015 23:03:38 GMT
+- request:
+    method: post
+    uri: https://particle:particle@api.particle.io/oauth/token
+    body:
+      encoding: UTF-8
+      string: client_id=particle&grant_type=password&password=password&username=username
+    headers:
+      User-Agent:
+      - Faraday v0.9.1
+      Content-Type:
+      - application/x-www-form-urlencoded
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - '*/*'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.6.2
+      Date:
+      - Thu, 21 May 2015 23:04:06 GMT
+      Content-Type:
+      - application/json; charset=utf-8
+      Content-Length:
+      - '178'
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Express
+      Access-Control-Allow-Origin:
+      - '*'
+      Cache-Control:
+      - no-store
+      Pragma:
+      - no-cache
+      X-Content-Type-Options:
+      - nosniff
+    body:
+      encoding: UTF-8
+      string: |-
+        {
+          "token_type": "bearer",
+          "access_token": "access_token_1",
+          "expires_in": 7776000,
+          "refresh_token": "some_refresh_token"
+        }
+    http_version: 
+  recorded_at: Thu, 21 May 2015 23:04:06 GMT
+recorded_with: VCR 2.9.3
