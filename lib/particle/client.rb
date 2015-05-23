@@ -24,10 +24,17 @@ module Particle
     end
 
     def devices()
+      @device_list = []
       r = @client.get('devices')
       if r.success?
         #TODO: consider using FaradayMiddleware::ParseJson
-        @device_list = JSON.parse(r.body)
+        device_list = JSON.parse(r.body)
+        device_list.each do |d|
+          obj = device(d[:id])
+          obj.name = d[:name]
+          @device_list << obj
+        end
+        @device_list
       else
         raise Particle::Error.new "API Error: #{JSON.parse(r.body)}"
       end
@@ -45,7 +52,7 @@ module Particle
 
     # return Particle::Device for the id specified.
     def device(device_id)
-      nil
+      Particle::Device.new(@access_token, device_id, lazy_init: true)
     end
 
     # Access_token-related methods require username and password auth.

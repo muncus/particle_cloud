@@ -5,6 +5,8 @@ module Particle
 
   class Device < Particle::Client
 
+    attr_reader :name
+
     def initialize(access_token, deviceid, base_url: nil, lazy_init: false)
       @id = deviceid
       super(access_token, base_url: base_url)
