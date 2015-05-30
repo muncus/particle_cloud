@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Particle do
+describe ParticleCloud do
   it 'has a version number' do
-    expect(Particle::VERSION).not_to be nil
+    expect(ParticleCloud::VERSION).not_to be nil
   end
 
   it 'does something useful' do
@@ -10,11 +10,11 @@ describe Particle do
   end
 end
 
-describe Particle::Client do
+describe ParticleCloud::Client do
 
   context "good access token" do
     before do
-      @client = Particle::Client.new("access_token")
+      @client = ParticleCloud::Client.new("access_token")
       @client.username = "username"
       @client.password = "password"
     end

@@ -1,16 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'particle/ruby/version'
+require 'particle_cloud/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "particle-ruby"
-  spec.version       = Particle::Ruby::VERSION
+  spec.name          = "particle_cloud"
+  spec.version       = ParticleCloud::VERSION
   spec.authors       = ["Marc Dougherty"]
   spec.email         = ["muncus@gmail.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
+  spec.summary       = %q{Interact with Particle.io cloud devices and APIs.}
+  spec.description   = %q{see http://docs.particle.io/core/api/ for details.}
   spec.homepage      = "TODO: Put your gem's website or public repo URL here."
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or

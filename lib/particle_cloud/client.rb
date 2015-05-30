@@ -1,7 +1,7 @@
 require 'faraday'
 require 'json'
 
-module Particle
+module ParticleCloud
   # Simple client for particle.io web services
   # http://docs.particle.io/photon/api/
 
@@ -36,7 +36,7 @@ module Particle
         end
         @device_list
       else
-        raise Particle::Error.new "API Error: #{JSON.parse(r.body)}"
+        raise ParticleCloud::Error.new "API Error: #{JSON.parse(r.body)}"
       end
     end
 
@@ -50,9 +50,9 @@ module Particle
       r.success?
     end
 
-    # return Particle::Device for the id specified.
+    # return ParticleCloud::Device for the id specified.
     def device(device_id)
-      Particle::Device.new(@access_token, device_id, lazy_init: true)
+      ParticleCloud::Device.new(@access_token, device_id, lazy_init: true)
     end
 
     # Access_token-related methods require username and password auth.
@@ -60,7 +60,7 @@ module Particle
     # or raises an error.
     def get_connection_with_basic_auth
       if not @username or not @password
-        raise Particle::Error.new("username and password must be set " +
+        raise ParticleCloud::Error.new("username and password must be set " +
             "before interacting with access_tokens")
       end
       conn = Faraday.new(:url => @base_url)
@@ -74,7 +74,7 @@ module Particle
       if r.success?
         @authtokens = JSON.parse(r.body)
       else
-        raise Particle::Error.new "API Error: #{r.body}"
+        raise ParticleCloud::Error.new "API Error: #{r.body}"
       end
     end
 
@@ -99,7 +99,7 @@ module Particle
       if r.success?
         return JSON.parse(r.body)
       else
-        raise Particle::Error.new("Token Creation failed: " + r.body)
+        raise ParticleCloud::Error.new("Token Creation failed: " + r.body)
       end
     end
 
@@ -110,7 +110,7 @@ module Particle
       if r.success?
         return true
       else
-        raise Particle::Error.new("Token Delete failed: " + r.body)
+        raise ParticleCloud::Error.new("Token Delete failed: " + r.body)
       end
     end
       

@@ -1,3 +1,3 @@
-module Particle
+module ParticleCloud
   VERSION = "0.1.0"
 end

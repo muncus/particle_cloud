@@ -1,9 +1,9 @@
 # Class to encapsulate operations on a Particle device (Core, Photon, etc).
 
 
-module Particle
+module ParticleCloud
 
-  class Device < Particle::Client
+  class Device < ParticleCloud::Client
 
     attr_reader :name
 
@@ -34,7 +34,7 @@ module Particle
         end
         @info_fetched = true
       else
-        raise Particle::Error.new("Error fetching device info: #{devinfo_response.body}")
+        raise ParticleCloud::Error.new("Error fetching device info: #{devinfo_response.body}")
       end
     end
 
