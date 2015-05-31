@@ -6,44 +6,50 @@ module ParticleCloud
   class Device < ParticleCloud::Client
 
     attr_reader :name
+    attr_reader :id
 
-    def initialize(access_token, deviceid, base_url: nil, lazy_init: false)
+    def initialize(access_token, deviceid, name: nil, base_url: nil, lazy_init: false)
       @id = deviceid
+      @name = name
+      @variables = []
+      @functions = []
       super(access_token, base_url: base_url)
 
-      self.delayed_init() unless lazy_init
+      if not lazy_init
+        self.delayed_init()
+      end
     end
 
     def delayed_init
       devinfo_response = @client.get("devices/#{@id}")
       #TODO: check for names which are present in both lists.
       # - is there protection against this?
+      @info_fetched = true
       if devinfo_response.success?
-        devobj = JSON.parse(devinfo_response.body)
-        devobj['variables'].keys().each do |v|
-          puts "Defining var: #{v}"
-          define_method(v) do
-            self.variables(v)
+        d = JSON.parse(devinfo_response.body)
+        d['variables'].keys().each do |v|
+          #puts "Defining var: #{v}"
+          define_singleton_method v.to_sym do
+            self.variable(v)
           end
         end
-        devobj['functions'].keys().each do |f|
-          puts "Defining function: #{f}"
-          define_method(f) do |**args|
-            self.function(f, **args)
+        d['functions'].each do |f|
+          @functions << f
+          define_singleton_method f.to_sym do |*args|
+            self.function(f, *args)
           end
         end
-        @info_fetched = true
       else
         raise ParticleCloud::Error.new("Error fetching device info: #{devinfo_response.body}")
       end
     end
 
-    def claim
-      super(@id)
-    end
-
     def info
-      self.device_info(@id)
+      devr = @client.get("devices/#{@id}")
+      if devr.success?
+        info = JSON.parse(devr.body)
+        return info
+      end
     end
 
     def variable(varname)
@@ -53,22 +59,20 @@ module ParticleCloud
       end
     end
 
-    def function(func, **args)
+    def function(func, *args)
       r = @client.post("devices/#{@id}/#{func}",
-                       **args) 
+                       *args)
       if r.success?
-        JSON.parse(r.body)['return_value']
+        s = JSON.parse(r.body)
+        return s["return_value"]
       end
     end
     
     # variables and functions called before initialization will trigger a call
     # to delayed_init(), populating methods, so they can be called.
-    def method_missing(m, *args, &block)
+    def smethod_missing(m, *args, &block)
       if not @info_fetched
         delayed_init()
-        self.call(m, *args, &block)
-      else
-        super()
       end
     end
   end

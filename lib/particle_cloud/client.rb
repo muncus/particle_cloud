@@ -17,6 +17,7 @@ module ParticleCloud
 
     def initialize(access_token, base_url: nil)
       @access_token = access_token
+      @device_list = []
       @base_url = (base_url or DefaultBaseUrl)
       @client = Faraday.new(
           :url => @base_url,
@@ -24,14 +25,12 @@ module ParticleCloud
     end
 
     def devices()
-      @device_list = []
       r = @client.get('devices')
       if r.success?
         #TODO: consider using FaradayMiddleware::ParseJson
         device_list = JSON.parse(r.body)
         device_list.each do |d|
-          obj = device(d[:id])
-          obj.name = d[:name]
+          obj = ParticleCloud::Device.new(@access_token, d["id"], name: d["name"], lazy_init: true)
           @device_list << obj
         end
         @device_list
@@ -52,7 +51,7 @@ module ParticleCloud
 
     # return ParticleCloud::Device for the id specified.
     def device(device_id)
-      ParticleCloud::Device.new(@access_token, device_id, lazy_init: true)
+      return ParticleCloud::Device.new(@access_token, device_id, lazy_init: true)
     end
 
     # Access_token-related methods require username and password auth.
