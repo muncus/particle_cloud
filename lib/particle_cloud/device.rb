@@ -28,15 +28,25 @@ module ParticleCloud
       if devinfo_response.success?
         d = JSON.parse(devinfo_response.body)
         d['variables'].keys().each do |v|
-          #puts "Defining var: #{v}"
-          define_singleton_method v.to_sym do
-            self.variable(v)
+          begin
+            method(v)
+          rescue NameError
+            @variables << v
+            define_singleton_method v.to_sym do
+              self.variable(v)
+            end
           end
         end
         d['functions'].each do |f|
-          @functions << f
-          define_singleton_method f.to_sym do |*args|
-            self.function(f, *args)
+          begin
+            # If a method with the given name exists, do not override it.
+            # This allows subclasses to handle arg parsing, etc.
+            method(f)
+          rescue NameError
+            @functions << f
+            define_singleton_method f.to_sym do |args: {}|
+              self.function(f, args)
+            end
           end
         end
       else
@@ -73,6 +83,7 @@ module ParticleCloud
     def method_missing(m, *args, &block)
       if not @info_fetched
         delayed_init()
+        self.call(m, *args, &block)
       end
     end
   end
