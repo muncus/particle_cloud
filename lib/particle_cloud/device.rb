@@ -70,7 +70,7 @@ module ParticleCloud
     
     # variables and functions called before initialization will trigger a call
     # to delayed_init(), populating methods, so they can be called.
-    def smethod_missing(m, *args, &block)
+    def method_missing(m, *args, &block)
       if not @info_fetched
         delayed_init()
       end
